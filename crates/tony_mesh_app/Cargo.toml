@@ -1,0 +1,8 @@
+[package]
+name = "tony_mesh_app"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tony_mesh = {path = "../tony_mesh"}
+nalgebra = {workspace = true}

@@ -1,0 +1,11 @@
+[package]
+name = "tony_mesh"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+nalgebra = {workspace = true}
+rayon = {workspace = true}
+thiserror = {workspace = true}
+itertools = "0.15.0"
+nalgebra-sparse = "0.12.0"
