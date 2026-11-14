@@ -3,4 +3,4 @@ mod mesh;
 pub mod io;
 
 pub use commons::*;
-pub use mesh::{Mesh, Edge};
+pub use mesh::{Edge, Mesh, MeshError};
