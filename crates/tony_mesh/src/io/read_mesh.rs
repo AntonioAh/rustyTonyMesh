@@ -1,4 +1,4 @@
-use crate::io::{get_file_type, get_path, FileType, IoError};
+use crate::io::{FileType, IoError, get_file_type, get_path};
 use crate::{FaceMatrix, Index, Mesh, Real, VertexMatrix};
 use std::fs;
 use std::path::Path;
@@ -128,7 +128,10 @@ mod tests {
 
     #[test]
     fn rejects_quad_faces() {
-        let p = write_tmp("quad.off", "OFF\n4 1 0\n0 0 0\n1 0 0\n1 1 0\n0 1 0\n4 0 1 2 3\n");
+        let p = write_tmp(
+            "quad.off",
+            "OFF\n4 1 0\n0 0 0\n1 0 0\n1 1 0\n0 1 0\n4 0 1 2 3\n",
+        );
         assert!(matches!(read_off(&p), Err(IoError::NotTriangleMesh)));
     }
 

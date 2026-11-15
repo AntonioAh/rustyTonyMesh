@@ -10,7 +10,6 @@ pub enum FileType {
 }
 #[derive(Debug, Error)]
 pub enum IoError {
-
     #[error("file not found")]
     FileNotFound,
 
@@ -28,7 +27,6 @@ pub enum IoError {
 
     #[error("can't read file format: {0}")]
     Generic(#[from] std::io::Error),
-
 }
 
 use std::path::{Path, PathBuf};
@@ -37,8 +35,9 @@ static FORMATS: [(&str, FileType); 2] = [("obj", FileType::Obj), ("off", FileTyp
 
 static DIRS: [&str; 3] = ["data/", "../data", "../../data"];
 
-pub fn get_path(file_name: &str) -> Result<PathBuf, IoError>{
-    DIRS.iter().map(|d| Path::new(d).join(file_name))
+pub fn get_path(file_name: &str) -> Result<PathBuf, IoError> {
+    DIRS.iter()
+        .map(|d| Path::new(d).join(file_name))
         .find(|p| p.is_file())
         .ok_or(IoError::FileNotFound)
 }
@@ -79,25 +78,43 @@ mod tests {
     #[test]
     fn only_the_last_extension_counts() {
         assert_eq!(file_type("bunny.v2.off").unwrap(), FileType::Off);
-        assert!(matches!(file_type("bunny.off.bak"), Err(IoError::ExtensionNotFound)));
+        assert!(matches!(
+            file_type("bunny.off.bak"),
+            Err(IoError::ExtensionNotFound)
+        ));
     }
 
     #[test]
     fn directories_in_the_path_are_ignored() {
-        assert_eq!(file_type("data/meshes.v1/bunny.off").unwrap(), FileType::Off);
+        assert_eq!(
+            file_type("data/meshes.v1/bunny.off").unwrap(),
+            FileType::Off
+        );
         assert_eq!(file_type("../../data/bunny.obj").unwrap(), FileType::Obj);
     }
 
     #[test]
     fn unknown_extension_is_rejected() {
-        assert!(matches!(file_type("bunny.ply"), Err(IoError::ExtensionNotFound)));
-        assert!(matches!(file_type("bunny.txt"), Err(IoError::ExtensionNotFound)));
+        assert!(matches!(
+            file_type("bunny.ply"),
+            Err(IoError::ExtensionNotFound)
+        ));
+        assert!(matches!(
+            file_type("bunny.txt"),
+            Err(IoError::ExtensionNotFound)
+        ));
     }
 
     #[test]
     fn missing_extension_is_rejected() {
-        assert!(matches!(file_type("bunny"), Err(IoError::ExtensionNotFound)));
-        assert!(matches!(file_type("data/bunny"), Err(IoError::ExtensionNotFound)));
+        assert!(matches!(
+            file_type("bunny"),
+            Err(IoError::ExtensionNotFound)
+        ));
+        assert!(matches!(
+            file_type("data/bunny"),
+            Err(IoError::ExtensionNotFound)
+        ));
         assert!(matches!(file_type(""), Err(IoError::ExtensionNotFound)));
     }
 
@@ -109,6 +126,9 @@ mod tests {
 
     #[test]
     fn trailing_dot_is_rejected() {
-        assert!(matches!(file_type("bunny."), Err(IoError::ExtensionNotFound)));
+        assert!(matches!(
+            file_type("bunny."),
+            Err(IoError::ExtensionNotFound)
+        ));
     }
 }
